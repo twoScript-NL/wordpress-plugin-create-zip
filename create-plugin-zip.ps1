@@ -4,9 +4,9 @@ param(
 
 # Variables
 $PluginDir = ".\"  # Assume you run the script from within "twobuild"
-$PluginBaseName = "twobuild"  # The base folder name for the plugin
+$PluginBaseName = "pluginName"  # The base folder name for the plugin
 $ZipName = "$PluginBaseName-v$plugin_version.zip"
-$TempFolder = "$env:TEMP\twobuild_temp"
+$TempFolder = "$env:TEMP\wp_plugin_temp"
 
 # Store the initial working directory
 $InitialWorkingDirectory = Get-Location

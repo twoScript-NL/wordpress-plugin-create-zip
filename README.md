@@ -9,7 +9,7 @@ Windows PowerShell script to create an installable zip file for your Wordpress p
 ---
 
 ## Step 2
-Set the excludes files and folders in $excludes 
+Set the excludes files and folders in $excludes and set the PluginBaseName
 
 ---
 
