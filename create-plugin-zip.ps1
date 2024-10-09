@@ -51,7 +51,8 @@ $excludes = @(
     "twobuild.zip",
     "test.php",
     "create-plugin-zip.sh",
-    "create-plugin-zip.ps1"
+    "create-plugin-zip.ps1",
+    "zip*"
 )
 
 # Function to check if a path matches any exclusion pattern
@@ -95,7 +96,7 @@ Write-Host "Creating ZIP file using 7-Zip: $ZipName"
 Set-Location -Path $TempFolder
 
 # Create the ZIP with the correct structure
-Start-Process $7zipPath -ArgumentList "a", "-tzip", "`"$InitialWorkingDirectory\$ZipName`"", "`"$PluginBaseName\*`"" -NoNewWindow -Wait
+Start-Process $7zipPath -ArgumentList "a", "-tzip", "`"$InitialWorkingDirectory\zip\$ZipName`"", "`"$PluginBaseName\*`"" -NoNewWindow -Wait
 
 # Reset location back to the initial working directory
 Set-Location -Path $InitialWorkingDirectory
