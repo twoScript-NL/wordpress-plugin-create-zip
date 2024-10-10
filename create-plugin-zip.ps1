@@ -23,9 +23,9 @@ if (-not (Test-Path $PluginDir)) {
 }
 
 # Remove the existing ZIP file if it exists
-if (Test-Path $ZipName) {
+if (Test-Path "zip\$ZipName") {
     Write-Host "Removing existing ZIP file: $ZipName"
-    Remove-Item $ZipName
+    Remove-Item "zip\$ZipName"
 }
 
 # Create a temporary folder to hold the plugin
