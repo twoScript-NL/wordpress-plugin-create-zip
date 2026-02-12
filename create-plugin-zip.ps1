@@ -1,10 +1,58 @@
-param(
-    [string]$plugin_version
-)
+# Always use current folder as plugin dir
+$PluginDir = (Get-Location).Path
 
-# Variables
-$PluginDir = ".\"  # Assume you run the script from within "twobuild"
-$PluginBaseName = "pluginName"  # The base folder name for the plugin
+# Find main plugin file
+$phpFiles = Get-ChildItem -Path $PluginDir -Filter "*.php" -File
+
+$MainPluginFile = $null
+$plugin_name = $null
+$content = $null
+
+foreach ($file in $phpFiles) {
+
+    # Read only first 50 lines (faster + safer)
+    $head = Get-Content $file.FullName -TotalCount 50 | Out-String
+
+    if ($head -match '(?m)^\s*\*?\s*Plugin Name:\s*(.+)$') {
+        $MainPluginFile = $file.FullName
+        $plugin_name = $matches[1].Trim()
+        $content = Get-Content $file.FullName -Raw
+        break
+    }
+}
+
+if (-not $MainPluginFile) {
+    Write-Host "Error: Could not find main plugin file (Plugin Name header missing)."
+    exit 1
+}
+
+Write-Host "Detected main plugin file: $MainPluginFile"
+Write-Host "Detected plugin name: $plugin_name"
+
+
+$content = Get-Content $MainPluginFile -Raw
+
+# Get version from header if not provided
+if ($content -match '(?m)^\s*\*?\s*Version:\s*([0-9A-Za-z._-]+)') {
+    $plugin_version = $matches[1]
+    Write-Host "Detected plugin version: $plugin_version"
+} else {
+    Write-Host "Error: Could not find Version header."
+    exit 1
+}
+
+
+# Determine plugin base folder name
+# Prefer Text Domain if available (WordPress standard)
+if ($content -match '(?m)^\s*\*?\s*Text Domain:\s*(.+)$') {
+    $PluginBaseName = $matches[1].Trim()
+    Write-Host "Using Text Domain as folder name: $PluginBaseName"
+} else {
+    # fallback → slugify plugin name
+    $PluginBaseName = ($plugin_name -replace '[^a-zA-Z0-9]+','_').ToLower()
+    Write-Host "Using generated folder name: $PluginBaseName"
+}
+
 $ZipName = "$PluginBaseName-v$plugin_version.zip"
 $TempFolder = "$env:TEMP\wp_plugin_temp"
 
@@ -45,12 +93,7 @@ $excludes = @(
     "node_modules*",
     "idea*",
     "assets\scss*",
-    "canvas_templates\*_canvas.json",
     "gulpfile.js",
-    "output_gall_en_gall_274534.pdf",
-    "twobuild.zip",
-    "test.php",
-    "create-plugin-zip.sh",
     "create-plugin-zip.ps1",
     "zip*"
 )

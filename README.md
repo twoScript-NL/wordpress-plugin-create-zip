@@ -20,4 +20,5 @@ Place the create-plugin-zip.ps1 in the plugin folder
 
 ## Step 4
 To exectute file go to Windows PowerShell with as an admin  
-`.\create-plugin-zip.ps1 -plugin_version "1.0.0"`
+`.\create-plugin-zip.ps1`
+The script checks the plugin root folder for the pluginfile with `Plugin name:` and based on this file decides the name and version
